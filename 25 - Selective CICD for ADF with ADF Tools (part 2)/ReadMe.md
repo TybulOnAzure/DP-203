@@ -1,13 +1,13 @@
 ## Selective Azure Data Factory CI/CD plug-n-play DevOps templates
 
 # Summary
-Templates for selective deployment of Azure Data Factory using [azure.datafactory.tools](https://github.com/Azure-Player/azure.datafactory.tools) with Azure DevOps
+Templates for selective deployment of Azure Data Factory using [azure.datafactory.tools](https://github.com/Azure-Player/azure.datafactory.tools) with Azure DevOps.
 
 # In Azure DevOps
 
 1. In Azure Data Factory
     1. Setup ADF sync repo in your data factory
-       - Recommended to use Root Folder path **/data-factory/** or **/data-factory/<data_factory_name>** if you have many ADFs
+       - Recommended to use Root Folder path **/data-factory/** or **/data-factory/<data_factory_name>** if you have many ADFs.
 2. In Azure DevOps
     1. Create folder **/devops/generic** and then, in that folder create **adf-selective-deploy-job-template.yml** file:
         
@@ -81,8 +81,8 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
         # Team1 section
         pipeline,Team_1_Pipeline,$.properties.activities[0].description,"Description for DEV environment"
         ```
-    1. Create similar files for your remaining environments, e.g. **UAT** and **PROD**.
-    1. Navigate to **Project Settings >> Service Connections** and create new connection to Azure using Service Principal and grant at last **Data Factory Contributor** role to all data factories that you will be deploying to
+    1. Create similar configuration files for your remaining environments, e.g. **UAT** and **PROD**.
+    1. Navigate to **Project Settings >> Service Connections** and create new connection to Azure using Service Principal and grant at least **Data Factory Contributor** role to all data factories that you will be deploying to:
 
           1. In Azure Portal navigate to Azure Active Directory and create new App Registration
           1. For ADF only piplines grant **Data Factory Contibutor** role on Azure Data Factory resource, or for full CI/CD in Azure grant **Contributor** role to an entire resource group
@@ -107,7 +107,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
         $opt.DeleteNotInSource = $true
         Publish-AdfV2FromJson -RootFolder "$rootFolder" -ResourceGroupName "$resourceGroupName" -DataFactoryName "$dataFactoryName" -Location "$location" -Option $opt -Stage "$configPath"
         ```
-    1. Navigate to **/devops/scope/everything** folder and create **pipeline.yml** file (replace temp variables):
+    1. Navigate to **/devops/scope/everything** folder and create **pipeline.yml** file (replace temp variables to match your **DEV** environment as this pipeline is used to sync **main** branch with **DEV** environment):
         ```YAML
         trigger:
         - main
@@ -118,7 +118,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
         stages:
         - stage: '<stage_name>'
           variables:
-          - group: '<variable_group_name (if used)>'
+          - group: '<variable_group_name (if_used)>'
           jobs:
           - template: '../../generic/adf-selective-deploy-job-template.yml'
             parameters:
@@ -149,8 +149,8 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
             $opt = New-AdfPublishOption
 
             ##################### THIS IS THE PART THAT REQUIRES CUSTOMIZATION ####################################
-            # Product1 artifacts to be deployed by this script
-            # Pipelines and datasets from Product1 folder in ADF:
+            # Team1 artifacts to be deployed by this script
+            # Pipelines and datasets from Team_1 folder in ADF:
             $selectedObjects = $adf.GetObjectsByFolderName('Team_1')
             # Linked services:
             $opt.Includes.Add("linkedService.ADLSg2_LS", "")
@@ -166,7 +166,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
             $opt.TriggerStopMethod = "DeployableOnly"
             Publish-AdfV2FromJson -RootFolder "$rootFolder" -ResourceGroupName "$resourceGroupName" -DataFactoryName "$dataFactoryName" -Location "$location" -Option $opt -Stage "$configPath"
             ```
-        1. In that folder, create **pipeline.yml** file with as many stages as you need (replace temp variables):
+        1. In that folder, create **pipeline.yml** file with as many stages as you need - one for every targe environment (replace temp variables):
               ```YAML
               trigger:
               - main
