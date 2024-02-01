@@ -127,11 +127,12 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
               dataFactoryName: '<data_factory_name>'
               location: '<data_factory_location>'
               resourceGroupName: '<resource_group_name>'
-              configPath: '$(System.DefaultWorkingDirectory)/devops/config/DEV.csv'
+              configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
               serviceConnectionName: '<service_connection_name>'
               deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
         
         ```
+    1. Create new pipeline and use **pipeline.yml** file as its source. Rename the pipeline if necessary.
     1. For every team/project that requires a selective deployment:
         1. Create a dedicated directory under **/devops/scope/**, e.g. **/devops/scope/Product1**.
         1. In that folder, create **deploy-script.ps1** file and customize objects to be deployed:
@@ -185,7 +186,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
                     dataFactoryName: '<data_factory_name>'
                     location: '<data_factory_location>'
                     resourceGroupName: '<resource_group_name>'
-                    configPath: '$(System.DefaultWorkingDirectory)/devops/config/DEV.csv'
+                    configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
                     serviceConnectionName: '<service_connection_name>'
                     deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
               
@@ -200,9 +201,9 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
                     dataFactoryName: '<data_factory_name>'
                     location: '<data_factory_location>'
                     resourceGroupName: '<resource_group_name>'
-                    configPath: '$(System.DefaultWorkingDirectory)/devops/config/DEV.csv'
+                    configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
                     serviceConnectionName: '<service_connection_name>'
                     deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
               ```
-    
+        1. Create new pipeline and use **pipeline.yml** file as its source. Rename the pipeline if necessary.
 
