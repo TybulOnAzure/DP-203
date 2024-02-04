@@ -168,9 +168,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
             ```
         1. In that folder, create **pipeline.yml** file with as many stages as you need - one for every targe environment (replace temp variables):
               ```YAML
-              trigger:
-              - main
-
+            
               pool:
                 vmImage: ubuntu-latest
 
