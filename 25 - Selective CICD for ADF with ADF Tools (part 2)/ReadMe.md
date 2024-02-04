@@ -186,7 +186,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
                     resourceGroupName: '<resource_group_name>'
                     configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
                     serviceConnectionName: '<service_connection_name>'
-                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
+                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/<team_or_project>/deploy-script.ps1'
               
               - stage: '<stage_name>'
                 variables:
@@ -201,7 +201,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
                     resourceGroupName: '<resource_group_name>'
                     configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
                     serviceConnectionName: '<service_connection_name>'
-                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
+                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/<team_or_project>/deploy-script.ps1'
               ```
         1. Create new pipeline and use **pipeline.yml** file as its source. Rename the pipeline if necessary.
 
