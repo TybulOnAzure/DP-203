@@ -168,9 +168,8 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
             ```
         1. In that folder, create **pipeline.yml** file with as many stages as you need - one for every targe environment (replace temp variables):
               ```YAML
-              trigger:
-              - main
-
+              trigger: none # Disable CI triggers as this pipeline is to be started manually
+            
               pool:
                 vmImage: ubuntu-latest
 
@@ -188,7 +187,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
                     resourceGroupName: '<resource_group_name>'
                     configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
                     serviceConnectionName: '<service_connection_name>'
-                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
+                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/<team_or_project>/deploy-script.ps1'
               
               - stage: '<stage_name>'
                 variables:
@@ -203,7 +202,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
                     resourceGroupName: '<resource_group_name>'
                     configPath: '$(System.DefaultWorkingDirectory)/devops/config/<config_file_name>.csv'
                     serviceConnectionName: '<service_connection_name>'
-                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/everything/deploy-script.ps1'
+                    deploymentScriptPath: '$(System.DefaultWorkingDirectory)/devops/scope/<team_or_project>/deploy-script.ps1'
               ```
         1. Create new pipeline and use **pipeline.yml** file as its source. Rename the pipeline if necessary.
 
