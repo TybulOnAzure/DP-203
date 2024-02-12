@@ -6,7 +6,7 @@ Templates for selective deployment of Azure Data Factory using [azure.datafactor
 # In Azure DevOps
 
 1. In Azure Data Factory
-    1. Setup ADF sync repo in your data factory
+    1. Setup ADF sync repo in your data factory (DEV instance only)
        - Recommended to use Root Folder path **/data-factory/** or **/data-factory/<data_factory_name>** if you have many ADFs.
 2. In Azure DevOps
     1. Create folder **/devops/generic** and then, in that folder create **adf-selective-deploy-job-template.yml** file:
