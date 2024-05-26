@@ -1,5 +1,5 @@
 # Databricks notebook source
-service_credential = "fDY8Q~G0DiBNL8M_uVR_FPK0IVUE.bugZy~YBaF-"
+service_credential = "my-hardcoded-value"
 
 spark.conf.set("fs.azure.account.auth.type.tybuldatalakedemo.dfs.core.windows.net", "OAuth")
 spark.conf.set("fs.azure.account.oauth.provider.type.tybuldatalakedemo.dfs.core.windows.net", "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider")
