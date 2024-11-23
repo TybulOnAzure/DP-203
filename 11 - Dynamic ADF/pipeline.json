@@ -1,0 +1,161 @@
+{
+    "name": "Dynamic pipeline",
+    "properties": {
+        "activities": [
+            {
+                "name": "Get a list of tables to be processed",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "AzureSqlSource",
+                        "sqlReaderQuery": "SELECT QUOTENAME(t.name) AS tableName, QUOTENAME(SCHEMA_NAME(t.schema_id)) AS schemaName FROM sys.tables as t",
+                        "queryTimeout": "02:00:00",
+                        "partitionOption": "None"
+                    },
+                    "dataset": {
+                        "referenceName": "GenericAzureSQLDB_DS",
+                        "type": "DatasetReference",
+                        "parameters": {
+                            "serverName": {
+                                "value": "@pipeline().parameters.serverName",
+                                "type": "Expression"
+                            },
+                            "databaseName": {
+                                "value": "@pipeline().parameters.databaseName",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    "firstRowOnly": false
+                }
+            },
+            {
+                "name": "Iterate over all tables",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Get a list of tables to be processed",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Get a list of tables to be processed').output.value",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "Copy data from table",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "source": {
+                                    "type": "AzureSqlSource",
+                                    "sqlReaderQuery": {
+                                        "value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName)",
+                                        "type": "Expression"
+                                    },
+                                    "queryTimeout": "02:00:00",
+                                    "partitionOption": "None"
+                                },
+                                "sink": {
+                                    "type": "DelimitedTextSink",
+                                    "storeSettings": {
+                                        "type": "AzureBlobFSWriteSettings"
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextWriteSettings",
+                                        "quoteAllText": true,
+                                        "fileExtension": ".txt"
+                                    }
+                                },
+                                "enableStaging": false,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            },
+                            "inputs": [
+                                {
+                                    "referenceName": "GenericAzureSQLDB_DS",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "serverName": {
+                                            "value": "@pipeline().parameters.serverName",
+                                            "type": "Expression"
+                                        },
+                                        "databaseName": {
+                                            "value": "@pipeline().parameters.databaseName",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                    "referenceName": "GenericADLSg2CSV_DS",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "serverName": {
+                                            "value": "@pipeline().parameters.serverName",
+                                            "type": "Expression"
+                                        },
+                                        "databaseName": {
+                                            "value": "@pipeline().parameters.databaseName",
+                                            "type": "Expression"
+                                        },
+                                        "schemaName": {
+                                            "value": "@item().schemaName",
+                                            "type": "Expression"
+                                        },
+                                        "tableName": {
+                                            "value": "@item().tableName",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "parameters": {
+            "serverName": {
+                "type": "string",
+                "defaultValue": "tybultrainingsql.database.windows.net"
+            },
+            "databaseName": {
+                "type": "string",
+                "defaultValue": "AdventureWorks"
+            }
+        },
+        "annotations": [],
+        "lastPublishTime": "2024-01-12T07:59:31Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
